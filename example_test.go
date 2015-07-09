@@ -39,11 +39,6 @@ func Example_EffectiveTLDPlusOne(u string) (string, error) {
 		u = u[len("//"):]
 	}
 
-	// A TLD+1 needs to be at least 4 characters.
-	if len(u) < 4 {
-		return "", fmt.Errorf("invalid domain")
-	}
-
 	if u[0] == '.' {
 		u = u[1:]
 	}
@@ -65,14 +60,19 @@ func Example_EffectiveTLDPlusOne(u string) (string, error) {
 
 	i := len(u) - 1
 
-	// A TLD+1 needs to be at least 4 characters.
-	if i < 3 {
+	// A TLD+1 needs to be at least 4 characters (g.cn for example).
+	if i < 3 { // Note the - 1 above.
 		return "", fmt.Errorf("invalid domain")
 	}
 
 	// Some web clients really fuck up and somehow end a domain with a '.', remove it.
 	if u[i] == '.' {
 		u = u[0:i]
+
+		// We removed 1 character so check the length again.
+		if i < 4 {
+			return "", fmt.Errorf("invalid domain")
+		}
 	}
 
 	if strings.IndexByte(u, '.') < 1 {
@@ -131,6 +131,10 @@ func TestExample(t *testing.T) {
 		[]string{"http://www.example.com./", "example.com"},
 
 		[]string{"http%3A%2F%2Fexample.com", "example.com"},
+
+		[]string{"http://example.com%2F", "example.com"},
+
+		[]string{"[example.com/]", ""},
 	}
 
 	for _, c := range cases {
