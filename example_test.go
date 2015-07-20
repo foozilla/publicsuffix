@@ -39,6 +39,11 @@ func Example_EffectiveTLDPlusOne(u string) (string, error) {
 		u = u[len("//"):]
 	}
 
+	// A TLD+1 needs to be at least 4 characters (g.cn for example).
+	if len(u) < 4 {
+		return "", fmt.Errorf("invalid domain")
+	}
+
 	if u[0] == '.' {
 		u = u[1:]
 	}
