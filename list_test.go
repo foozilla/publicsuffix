@@ -65,6 +65,7 @@ func TestICANN(t *testing.T) {
 	testCases := map[string]bool{
 		"foo.org":            true,
 		"foo.co.uk":          true,
+		"foo.za":             true,
 		"foo.dyndns.org":     false,
 		"foo.go.dyndns.org":  false,
 		"foo.blogspot.co.uk": false,
@@ -218,6 +219,27 @@ var publicSuffixTestCases = []struct {
 	{"www.zzz.zw", "zzz.zw"},
 	{"www.xxx.yyy.zzz.zw", "zzz.zw"},
 
+	// The .za rules are:
+	// ac.za
+	// agrica.za
+	// alt.za
+	// co.za
+	// edu.za
+	// gov.za
+	// grondar.za
+	// law.za
+	// mil.za
+	// net.za
+	// ngo.za
+	// nis.za
+	// nom.za
+	// org.za
+	// school.za
+	// tm.za
+	// web.za
+	{"www.zzz.za", "za"},
+	{"www.ac.za", "ac.za"},
+
 	// There are no .nosuchtld rules.
 	{"nosuchtld", "nosuchtld"},
 	{"foo.nosuchtld", "nosuchtld"},
@@ -350,10 +372,10 @@ var eTLDPlusOneTestCases = []struct {
 	{"a.b.example.uk.com", "example.uk.com"},
 	{"test.ac", "test.ac"},
 	// TLD with only 1 (wildcard) rule.
-	{"cy", ""},
-	{"c.cy", ""},
-	{"b.c.cy", "b.c.cy"},
-	{"a.b.c.cy", "b.c.cy"},
+	{"er", ""},
+	{"c.er", ""},
+	{"b.c.er", "b.c.er"},
+	{"a.b.c.er", "b.c.er"},
 	// More complex TLD.
 	{"jp", ""},
 	{"test.jp", "test.jp"},
