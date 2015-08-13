@@ -5,26 +5,10 @@ import (
 	"net"
 	"net/url"
 	"strings"
-	"unicode/utf8"
 
 	"github.com/atomx/publicsuffix"
 	"github.com/miekg/dns/idn"
 )
-
-// needpuny returns true for strings that require punycode encoding
-// (contain unicode characters).
-func needpuny(s string) bool {
-	// This function is very similar to bytes.Runes. We don't use bytes.Runes
-	// because it makes a heap allocation that's not needed here.
-	for i := 0; len(s) > 0; i++ {
-		r, l := utf8.DecodeRuneInString(s)
-		if r > 0x7f {
-			return true
-		}
-		s = s[l:]
-	}
-	return false
-}
 
 // nonHostname returns the index of the first character not belonging to the hostname.
 func nonHostname(s string) int {
@@ -90,11 +74,9 @@ func EffectiveTLDPlusOne(u string) (string, error) {
 		}
 	}
 
-	// Only do this if needed to prevent allocations.
-	if needpuny(u) {
-		// IE11 doesn't use Punycode in referrers, so encode it here first.
-		u = idn.ToPunycode(u)
-	}
+	// IE11 doesn't use Punycode in referrers, so encode it here first.
+	// No need to check if this is needed, idn.ToPunycode has this check already.
+	u = idn.ToPunycode(u)
 
 	// Trim everything after the first non hostname character.
 	ii := nonHostname(u)
