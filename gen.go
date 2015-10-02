@@ -102,7 +102,7 @@ var (
 	crush  = flag.Bool("crush", true, "make the generated node text as small as possible")
 	subset = flag.Bool("subset", false, "generate only a subset of the full table, for debugging")
 	url    = flag.String("url",
-		"http://mxr.mozilla.org/mozilla-central/source/netwerk/dns/effective_tld_names.dat?raw=1",
+		"https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat",
 		"URL of the publicsuffix.org list. If empty, stdin is read instead")
 	v       = flag.Bool("v", false, "verbose output (to stderr)")
 	version = flag.String("version", "", "the effective_tld_names.dat version")
