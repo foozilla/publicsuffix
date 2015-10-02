@@ -53,7 +53,8 @@ func TestURI(t *testing.T) {
 
 		[]string{"[example.com/]", ""},
 
-		[]string{"test.invalid", ""},
+		[]string{"foo.invalid", ""},
+		[]string{"foo.bar.invalid", ""},
 
 		// Cases found by https://github.com/dvyukov/go-fuzz
 		[]string{"-.i-", ""},
@@ -66,6 +67,8 @@ func TestURI(t *testing.T) {
 		// "a subsequent specification (RFC 1123) permitted hostname labels to start with digits"
 		[]string{"00l.com", "00l.com"},
 		[]string{"000.com", "000.com"},
+
+		[]string{"test.githubusercontent.com", "test.githubusercontent.com"},
 	}
 
 	for _, c := range cases {

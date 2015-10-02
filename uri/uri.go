@@ -115,9 +115,9 @@ func EffectiveTLDPlusOne(u string) (string, error) {
 		return u, nil
 	}
 
-	suffix, icann := publicsuffix.PublicSuffix(u)
-	if !icann {
-		return "", fmt.Errorf("uri: none icann domain %q", u)
+	suffix, _, matched := publicsuffix.PublicSuffix(u)
+	if !matched {
+		 return "", fmt.Errorf("uri: no tld match found for domain %q", u)
 	}
 
 	if len(u) <= len(suffix) {

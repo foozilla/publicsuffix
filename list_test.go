@@ -65,14 +65,32 @@ func TestICANN(t *testing.T) {
 	testCases := map[string]bool{
 		"foo.org":            true,
 		"foo.co.uk":          true,
-		"foo.za":             true,
+		"foo.za":             false,
 		"foo.dyndns.org":     false,
 		"foo.go.dyndns.org":  false,
 		"foo.blogspot.co.uk": false,
 		"foo.intranet":       false,
 	}
 	for domain, want := range testCases {
-		_, got := PublicSuffix(domain)
+		_, got, _ := PublicSuffix(domain)
+		if got != want {
+			t.Errorf("%q: got %v, want %v", domain, got, want)
+		}
+	}
+}
+
+func TestMatched(t *testing.T) {
+	testCases := map[string]bool{
+		"foo.org":            true,
+		"foo.co.uk":          true,
+		"foo.za":             false,
+		"foo.dyndns.org":     true,
+		"foo.go.dyndns.org":  true,
+		"foo.blogspot.co.uk": true,
+		"foo.intranet":       false,
+	}
+	for domain, want := range testCases {
+		_, _, got := PublicSuffix(domain)
 		if got != want {
 			t.Errorf("%q: got %v, want %v", domain, got, want)
 		}

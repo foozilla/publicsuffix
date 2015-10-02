@@ -23,7 +23,7 @@ var List cookiejar.PublicSuffixList = list{}
 type list struct{}
 
 func (list) PublicSuffix(domain string) string {
-	ps, _ := PublicSuffix(domain)
+	ps, _, _ := PublicSuffix(domain)
 	return ps
 }
 
@@ -42,7 +42,7 @@ func (list) String() string {
 // Use cases for distinguishing ICANN domains like foo.com from private
 // domains like foo.appspot.com can be found at
 // https://wiki.mozilla.org/Public_Suffix_List/Use_Cases
-func PublicSuffix(domain string) (publicSuffix string, icann bool) {
+func PublicSuffix(domain string) (publicSuffix string, icann bool, matched bool) {
 	lo, hi := uint32(0), uint32(numTLD)
 	s, suffix, wildcard := domain, len(domain), false
 loop:
@@ -84,9 +84,10 @@ loop:
 	}
 	if suffix == len(domain) {
 		// If no rules match, the prevailing rule is "*".
-		return domain[1+strings.LastIndex(domain, "."):], icann
+		// This can never be managed by the ICANN.
+		return domain[1+strings.LastIndex(domain, "."):], false, false
 	}
-	return domain[suffix:], icann
+	return domain[suffix:], icann, true
 }
 
 const notFound uint32 = 1<<32 - 1
@@ -121,7 +122,7 @@ func nodeLabel(i uint32) string {
 // EffectiveTLDPlusOne returns the effective top level domain plus one more
 // label. For example, the eTLD+1 for "foo.bar.golang.org" is "golang.org".
 func EffectiveTLDPlusOne(domain string) (string, error) {
-	suffix, _ := PublicSuffix(domain)
+	suffix, _, _ := PublicSuffix(domain)
 	if len(domain) <= len(suffix) {
 		return "", fmt.Errorf("publicsuffix: cannot derive eTLD+1 for domain %q", domain)
 	}
