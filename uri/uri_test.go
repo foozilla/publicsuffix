@@ -69,6 +69,9 @@ func TestURI(t *testing.T) {
 		[]string{"000.com", "000.com"},
 
 		[]string{"test.githubusercontent.com", "test.githubusercontent.com"},
+
+		[]string{"http://测试.com/", "xn--0zwm56d.com"},
+		[]string{"http://测试.com:80/", "xn--0zwm56d.com"},
 	}
 
 	for _, c := range cases {
@@ -76,5 +79,11 @@ func TestURI(t *testing.T) {
 		if domain != c[1] {
 			t.Errorf("%s: %s != \"%s\" (%v)\n", c[0], domain, c[1], err)
 		}
+	}
+}
+
+func BenchmarkURI(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		EffectiveTLDPlusOne("https://www.example.com/foobar?test")
 	}
 }
