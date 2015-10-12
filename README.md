@@ -1,7 +1,7 @@
 
 Our local fork of https://code.google.com/p/go/source/browse/publicsuffix/?repo=net
 
-Last update: 2015-10-01
+Last update: 2015-10-12
 
 To check for a new version see: https://github.com/publicsuffix/list
 
