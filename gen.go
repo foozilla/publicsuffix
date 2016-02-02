@@ -32,7 +32,7 @@ import (
 	"sort"
 	"strings"
 
-	"code.google.com/p/go.net/idna"
+	"github.com/miekg/dns/idn"
 )
 
 const (
@@ -164,10 +164,7 @@ func main1() error {
 		if s == "" || strings.HasPrefix(s, "//") {
 			continue
 		}
-		s, err = idna.ToASCII(s)
-		if err != nil {
-			return err
-		}
+		s = idn.ToPunycode(s)
 		if !validSuffix.MatchString(s) {
 			return fmt.Errorf("bad publicsuffix.org list data: %q", s)
 		}
